@@ -1,0 +1,6 @@
+{
+  "name": "Arbi Sikkhi — আরবি শিখি",
+  "description": "Zero-to-Expert Quranic Arabic, MSA & Saudi/Gulf Spoken learning platform with native Bangla & English localization, Age-Adaptive Modes (3–90), Live Makharij Vocal Tract Lab, Comet Stroke Handwriting, and Virtual Ustad AI.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

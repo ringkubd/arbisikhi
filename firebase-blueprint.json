@@ -1,0 +1,295 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Private authenticated account record isolating user PII (email) strictly to the account owner.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the account owner"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 3,
+          "maxLength": 254,
+          "description": "Verified account email address isolated to owner"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Account holder display name"
+        },
+        "familyName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Family unit display name"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when account was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when account was last updated"
+        }
+      },
+      "required": [
+        "ownerId",
+        "email",
+        "displayName",
+        "familyName",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "LearnerProfile": {
+      "title": "LearnerProfile",
+      "description": "Persistent learning progress document for an individual learner profile within a family account.",
+      "type": "object",
+      "properties": {
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Unique profile identifier within the family account"
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID owning this learner profile"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Learner display name"
+        },
+        "ageMode": {
+          "type": "string",
+          "enum": ["kids", "standard", "senior"],
+          "description": "Age-adaptive UX mode"
+        },
+        "ageYears": {
+          "type": "integer",
+          "description": "Learner age in years (3 to 100)"
+        },
+        "preferredTrack": {
+          "type": "string",
+          "enum": ["quran", "msa", "gulf"],
+          "description": "Selected Arabic curriculum track"
+        },
+        "dailyGoalTier": {
+          "type": "string",
+          "enum": ["casual", "consistent", "intensive"],
+          "description": "Daily study goal tier"
+        },
+        "dailyMinutesStudied": {
+          "type": "integer",
+          "description": "Minutes studied on lastStudyDate (0 to 1440)"
+        },
+        "lastStudyDate": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Local YYYY-MM-DD study date key"
+        },
+        "studyHistory": {
+          "type": "object",
+          "description": "Bounded map of recent YYYY-MM-DD keys to study minutes"
+        },
+        "xp": {
+          "type": "integer",
+          "description": "Cumulative total XP earned"
+        },
+        "weeklyXp": {
+          "type": "integer",
+          "description": "XP earned during the current 7-day window"
+        },
+        "streakDays": {
+          "type": "integer",
+          "description": "Consecutive days of study streak"
+        },
+        "audioSpeed": {
+          "type": "number",
+          "description": "Preferred Arabic audio playback speed"
+        },
+        "masteredLetters": {
+          "type": "array",
+          "description": "Bounded list of mastered Arabic letter IDs (max 28)"
+        },
+        "completedSurahs": {
+          "type": "array",
+          "description": "Bounded list of completed Surah IDs (max 114)"
+        },
+        "completedScenarios": {
+          "type": "array",
+          "description": "Bounded list of completed dialogue scenario IDs (max 50)"
+        },
+        "downloadedPacks": {
+          "type": "array",
+          "description": "Bounded list of cached offline audio pack IDs (max 20)"
+        },
+        "srs": {
+          "type": "object",
+          "description": "Bounded map of SRS flashcard IDs to review state"
+        },
+        "shareOnGlobal": {
+          "type": "boolean",
+          "description": "Whether non-PII stats are shared on the Global Leaderboard"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when profile was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when profile was last updated"
+        }
+      },
+      "required": [
+        "profileId",
+        "ownerId",
+        "name",
+        "ageMode",
+        "ageYears",
+        "preferredTrack",
+        "dailyGoalTier",
+        "dailyMinutesStudied",
+        "lastStudyDate",
+        "studyHistory",
+        "xp",
+        "weeklyXp",
+        "streakDays",
+        "audioSpeed",
+        "masteredLetters",
+        "completedSurahs",
+        "completedScenarios",
+        "downloadedPacks",
+        "srs",
+        "shareOnGlobal",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Sanitized non-PII leaderboard summary linked to a verified learner profile for Global Leaderboard ranking.",
+      "type": "object",
+      "properties": {
+        "entryId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Composite entry ID ({ownerId}_{profileId})"
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the owning account"
+        },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Referenced learner profile ID"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Public non-PII learner display name"
+        },
+        "familyLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Public non-PII family unit label"
+        },
+        "ageMode": {
+          "type": "string",
+          "enum": ["kids", "standard", "senior"],
+          "description": "Age-adaptive mode"
+        },
+        "preferredTrack": {
+          "type": "string",
+          "enum": ["quran", "msa", "gulf"],
+          "description": "Selected Arabic curriculum track"
+        },
+        "publicWeeklyXp": {
+          "type": "integer",
+          "description": "Public weekly XP (>= 0 when shared publicly, -1 when private to family)"
+        },
+        "totalXp": {
+          "type": "integer",
+          "description": "Cumulative total XP"
+        },
+        "streakDays": {
+          "type": "integer",
+          "description": "Current consecutive day streak"
+        },
+        "masteredLettersCount": {
+          "type": "integer",
+          "description": "Count of mastered Arabic letters (0 to 28)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when entry was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when entry was last updated"
+        }
+      },
+      "required": [
+        "entryId",
+        "ownerId",
+        "profileId",
+        "displayName",
+        "familyLabel",
+        "ageMode",
+        "preferredTrack",
+        "publicWeeklyXp",
+        "totalXp",
+        "streakDays",
+        "masteredLettersCount",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserAccount",
+      "description": "Private user account documents containing owner PII (email) restricted strictly to the owner."
+    },
+    "/users/{userId}/profiles/{profileId}": {
+      "schema": "LearnerProfile",
+      "description": "Subcollection of family learner profiles storing persistent Arabic mastery, SRS, daily goals, streaks, and XP."
+    },
+    "/leaderboard_entries/{entryId}": {
+      "schema": "LeaderboardEntry",
+      "description": "Public non-PII leaderboard entries synced atomically with verified learner profiles."
+    }
+  }
+}
